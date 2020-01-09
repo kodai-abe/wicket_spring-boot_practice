@@ -1,0 +1,21 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<h1>サインイン</h1>
+<div wicket:id="signInContainer">
+  <p wicket:id="signInLabel"></p>
+  <form action="#" wicket:id="userInfo">
+    <div>ユーザー名：<input type="text" wicket:id="userName"/></div>
+    <div>パスワード：<input type="password" wicket:id="userPass"/></div>
+    <div>
+      <button type="submit">サインイン</button>
+    </div>
+  </form>
+</div>
+<div wicket:id="signedContainer">
+  <p wicket:id="signedLabel"></p>
+  <p><a wicket:id="signedLink">認証後ページへ遷移</a></p>
+</div>
+</body>
+</html>
+

@@ -115,12 +115,12 @@ public class SignExPage extends WebPage {
     };
     signedContainer.add(signedLink);
 
-    AjaxSelfUpdatingTimerBehavior behavior = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(20)) {
+    var behavior = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(20)) {
       @Override
       protected void onPostProcessTarget(AjaxRequestTarget target) {
         super.onPostProcessTarget(target);
-        target.add(~~~Container);
-        target.add(~~~Container);
+        target.add(signInContainer);
+        target.add(signedContainer);
       }
     };
     add(behavior);

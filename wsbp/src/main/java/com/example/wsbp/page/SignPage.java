@@ -4,10 +4,15 @@ import com.example.wsbp.MySession;
 import com.example.wsbp.page.signed.SignedPage;
 import com.example.wsbp.service.IUserService;
 import com.giffing.wicket.spring.boot.context.scan.WicketSignInPage;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -21,6 +26,26 @@ public class SignPage extends WebPage {
   private IUserService service;
 
   public SignPage() {
+
+    var signInContainer = new WebMarkupContainer("signInContainer") {
+
+      @Override
+      protected void onInitialize() {
+        super.onInitialize();
+        setOutputMarkupId(true);
+      }
+
+      @Override
+      protected void onConfigure() {
+        super.onConfigure();
+        setVisible(MySession.get().getUserName() == null);
+      }
+    };
+    add(signInContainer);
+
+    var signInLabel = new Label("signInLabel", Model.of("ログインしてください"));
+    signInContainer.add(signInLabel);
+
     var userNameModel = Model.of("");
     var userPassModel = Model.of("");
 
@@ -36,7 +61,7 @@ public class SignPage extends WebPage {
         setResponsePage(new SignedPage());
       }
     };
-    add(userInfoForm);
+    signInContainer.add(userInfoForm);
 
     var userNameField = new TextField<>("userName", userNameModel) {
       @Override
@@ -58,5 +83,47 @@ public class SignPage extends WebPage {
       }
     };
     userInfoForm.add(userPassField);
+
+
+    var signedContainer = new WebMarkupContainer("signedContainer") {
+
+      @Override
+      protected void onInitialize() {
+        super.onInitialize();
+        setOutputMarkupId(true);
+      }
+
+      @Override
+      protected void onConfigure() {
+        super.onConfigure();
+        setVisible(!(MySession.get().getUserName() == null));
+      }
+    };
+    add(signedContainer);
+
+    var signedLabel = new Label("signedLabel", Model.of("ログイン済みです"));
+    signedContainer.add(signedLabel);
+
+    var signedLink = new Link<>("signedLink"){
+
+      @Override
+      public void onClick() {
+        setResponsePage(new SignedPage());
+      }
+    };
+    signedContainer.add(signedLink);
+
+
+    var ajaxLink = new AjaxLink<>("ajaxLink") {
+
+      @Override
+      public void onClick(AjaxRequestTarget target) {
+        target.add(signInContainer);
+        target.add(signedContainer);
+      }
+    };
+    add(ajaxLink);
+
   }
+
 }
